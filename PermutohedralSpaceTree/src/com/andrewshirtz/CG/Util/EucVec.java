@@ -13,12 +13,12 @@ public class EucVec {
 	 * 		STATIC MEMBERS
 	 */
 	
-	private static double epsilon = 0.0000000001;
+	private static double epsilon = 1e-10;
 	
 	// Note: Commutative Automorphism functions have variable number of parameters 
 	public static EucVec add (EucVec... vecs) {
-		if (EucVec.dimCheck(vecs)) {
-			// TODO: Throw DimensionMismatchException if dimensions don't match
+		if (!EucVec.dimCheck(vecs)) {
+			throw new DimensionMismatchException ("Unable to add vectors, mismatched dimensions.");
 		}
 		
 		EucVec result = EucVec.zero(vecs[0].getDimension());
@@ -48,8 +48,8 @@ public class EucVec {
 	}
 	
 	public static double dot (EucVec a, EucVec b) {
-		if (EucVec.dimCheck(a,b)) {
-			// TODO: Throw DimensionMismatchException if dimensions don't match
+		if (!EucVec.dimCheck(a,b)) {
+			throw new DimensionMismatchException ("Unable to take dot product of vectors, mismatched dimensions.");
 		}
 		
 		double result = 0.0;
@@ -61,8 +61,8 @@ public class EucVec {
 	
 	// Note: Commutative Automorphism functions have variable number of parameters
 	public static EucVec hadamard (EucVec... vecs) {
-		if (EucVec.dimCheck(vecs)) {
-			// TODO: Throw DimensionMismatchException if dimensions don't match
+		if (!EucVec.dimCheck(vecs)) {
+			throw new DimensionMismatchException ("Unable to take Hadamard product of vectors, mismatched dimensions.");
 		}
 		
 		EucVec result = new EucVec(vecs[0]);
@@ -81,11 +81,11 @@ public class EucVec {
 	}
 	
 	public static EucVec linearCombination (double[] coefs, EucVec... vecs) {
-		if (EucVec.dimCheck(vecs)) {
-			// TODO: Throw DimensionMismatchException if dimensions don't match
+		if (!EucVec.dimCheck(vecs)) {
+			throw new DimensionMismatchException ("Unable to evaluate linear combination, mismatched dimensions in the set of vectors.");
 		}
 		if (coefs.length != vecs.length) {
-			// TODO: Throw a subclass of ArithmeticException...
+			throw new ArithmeticException ("Unable to evaluate linear combination, mismatched number of coefficients");
 		}
 		EucVec result = EucVec.zero(vecs[0].getDimension());
 		
@@ -97,12 +97,11 @@ public class EucVec {
 	}
 	
 	public static double dist (EucVec a, EucVec b) {
-		if (EucVec.dimCheck(a, b)) {
-			// TODO: Throw DimensionMismatchException if dimensions don't match
+		if (!EucVec.dimCheck(a, b)) {
+			throw new DimensionMismatchException ("Unable to calculate distance between vectors, mismatched dimensions.");
 		}
 		
-		EucVec tmp = EucVec.scale(-1.0, b);
-		return (EucVec.add(a, tmp)).getMagnitude();
+		return (EucVec.add(a, EucVec.scale(-1.0, b))).getMagnitude();
 	}
 	
 	public static EucVec normalize (EucVec v) {
@@ -113,13 +112,10 @@ public class EucVec {
 		return new EucVec(dim);
 	}
 	
-	// TODO: Rename and better description
 	// Note: This function creates a EucVec with all dimensions set to the given value
 	public static EucVec allDimEqual (int dim, double value) {
 		EucVec result = EucVec.zero(dim);
-		for (int i = 0; i < result.getDimension(); i++) {
-			result.values[i] = value;
-		}
+		result.setAllValues(value);
 		return result;
 	}
 	
@@ -143,7 +139,8 @@ public class EucVec {
 		this.values = new double[dim];
 	}
 	
-	private EucVec (EucVec orig) {
+	// Note: Shallow copy constructor
+	public EucVec (EucVec orig) {
 		this.values = new double[orig.values.length];
 		System.arraycopy(orig.values, 0, this.values, 0, orig.values.length);
 	}
@@ -153,21 +150,26 @@ public class EucVec {
 	}
 	
 	public int getDimension	() { return this.values.length; }
-	public EucVec getCopy 	() { return new EucVec(this); }
 	
 	// TODO: return these two methods to protected when done with intermediate testing
 	public double getValue (int dim) {
 		if (this.getDimension() < dim) {
-			// TODO: Throw DimensionMismatchException
+			throw new DimensionMismatchException ("Unable to access value, vector does not contain dimension.");
 		}
 		return this.values[dim];
 	}
 	
 	public void setValue (int dim, double value) {
 		if (this.getDimension() < dim) {
-			// TODO: Throw DimensionMismatchException
+			throw new DimensionMismatchException ("Unable to mutate value, vector does not contain dimension.");
 		}
 		this.values[dim] = value;
+	}
+	
+	public void setAllValues (double value) {
+		for (int i = 0; i < this.getDimension(); i++) {
+			this.values[i] = value;
+		}
 	}
 	
 	public double getSqrMagnitude () {
@@ -205,7 +207,7 @@ public class EucVec {
 		double hash = 17;
 		
 		for (int i = 0; i < this.getDimension(); i++) {
-			hash *= hash * this.values[i];
+			hash *= hash + this.values[i];
 		}
 		
 		return (int) hash;

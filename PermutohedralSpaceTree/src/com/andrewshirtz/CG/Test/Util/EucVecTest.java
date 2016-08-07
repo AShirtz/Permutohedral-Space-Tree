@@ -114,7 +114,7 @@ public class EucVecTest {
 	@Test
 	public void testGetCopy() {
 		EucVec v = new EucVec(3.0, 4.0);
-		EucVec u = v.getCopy();
+		EucVec u = new EucVec(v);
 		
 		assertTrue (25.0 == v.getSqrMagnitude());
 		assertTrue (5.0 == u.getMagnitude());
@@ -136,7 +136,7 @@ public class EucVecTest {
 	@Test
 	public void testEquals() {
 		EucVec v = new EucVec(3.0, 4.0);
-		EucVec u = v.getCopy();
+		EucVec u = new EucVec(v);
 		
 		assertEquals (u,v);
 		
@@ -151,7 +151,7 @@ public class EucVecTest {
 	public void testHashCode () {
 		
 		EucVec v = new EucVec(3.0, 4.0);
-		EucVec u = v.getCopy();
+		EucVec u = new EucVec(v);
 		
 		assertEquals (u.hashCode(),v.hashCode());
 		

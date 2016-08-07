@@ -4,4 +4,10 @@ package com.andrewshirtz.CG.Exceptions;
 
 public class DimensionMismatchException extends ArithmeticException {
 
+	
+	public DimensionMismatchException () {}
+	
+	public DimensionMismatchException (String msg) {
+		super (msg);
+	}
 }
