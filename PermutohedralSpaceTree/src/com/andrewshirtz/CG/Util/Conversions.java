@@ -207,7 +207,7 @@ public class Conversions {
 		
 		// If a EucVec localOffset is included as a parameter, set the values of localOffset to be the remainders
 		// The provided localOffset object must have the correct dimension/order
-		if (localOffset.getDimension() != order) {
+		if (localOffset != null && localOffset.getDimension() != order) {
 			localOffset = null;
 		}
 		
@@ -280,6 +280,11 @@ public class Conversions {
 	}
 	
 	public static EucVec CanAddrToEucVec (CanAddr inCan, EucVec localOffset) {
+		// OriginCanAddr Guard Clause
+		if (inCan.getClass() == OriginCanAddr.class) {
+			return EucVec.zero(inCan.getOrder() - 1);
+		}
+		
 		int order = inCan.getOrder();
 		int index = 0;
 		
@@ -287,7 +292,7 @@ public class Conversions {
 		
 		long [] latPoint = new long[order];
 		
-		for (index = inCan.getLeastSigIndex(); index < (inCan.getMostSigIndex()); index++) {
+		for (index = inCan.getLeastSigIndex(); index <= inCan.getMostSigIndex(); index++) {
 			for (int j = 0; j < order; j++) {
 				latPoint[j] = (inCan.getBit(index, j)) ? (1) : (0);
 			}

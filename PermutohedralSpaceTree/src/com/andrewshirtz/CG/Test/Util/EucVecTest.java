@@ -12,7 +12,7 @@ public class EucVecTest {
 	@Before
 	public void setUp() throws Exception {
 	}
-
+	
 	@Test
 	public void testAdd() {
 		// TODO: Add test case for dimension mismatch exception
