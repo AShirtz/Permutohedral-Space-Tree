@@ -12,9 +12,8 @@ import com.andrewshirtz.CG.Util.EucVec;
 
 public class ConversionsTest {
 
-	// Note: This Test will have to be removed when the initSubspaceBasis method turns private again
-	// 		I just wanted a to test the implementation of Gram-Schmidt w/o the EucVec -> LatAddr conversion
-	// TODO: Intermediate test, Remove
+	/*
+	 * // NOTE: This test was to validate correctness of methods that are now private.
 	@Test
 	public void testInitSubspaceBasis() {
 		int minOrder = 3;
@@ -64,8 +63,10 @@ public class ConversionsTest {
 		}
 		
 	}
+	*/
 	
-	// TODO: Intermediate test, Remove
+	/*
+	 * // NOTE: This test was to validate correctness of methods that are now private.
 	@Test
 	public void testInitSimplexVectors() {
 		int minOrder = 3;
@@ -139,8 +140,10 @@ public class ConversionsTest {
 			assertTrue (epsilon > Math.abs(t1t2Dot - abDot));
 		}
 	}
+	*/
 
-	// TODO: Intermediate test, Remove when finished
+	/*
+	 * 	// NOTE: This test was to validate correctness of methods that are now private.
 	@Test
 	public void testRoundTrip1 () {
 		int minOrder = 3;
@@ -174,7 +177,10 @@ public class ConversionsTest {
 			}
 		}
 	}
+	*/
 	
+	/*
+	 *  // NOTE: This test was to validate correctness of methods that are now private.
 	@Test
 	public void testFullRoundTrip () {
 		int minOrder = 3;
@@ -204,17 +210,5 @@ public class ConversionsTest {
 			}
 		}
 	}
-	
-	@Test
-	public void test () {
-		EucVec a = new EucVec(646.1, 228.146, 55.7715);
-		EucVec b = new EucVec(648.011, 221.683, 56.2091);
-		EucVec c = new EucVec(654.935, 215.393, 54.0165);
-		
-		CanAddr aAddr = Conversions.EucVecToCanAddr(a);
-		CanAddr bAddr = Conversions.EucVecToCanAddr(b);
-		CanAddr cAddr = Conversions.EucVecToCanAddr(c);
-		
-		System.out.println("");
-	}
+	*/
 }

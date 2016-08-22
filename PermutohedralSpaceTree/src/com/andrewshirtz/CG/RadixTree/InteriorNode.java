@@ -5,13 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.andrewshirtz.CG.Util.CanAddr;
-import com.andrewshirtz.CG.Util.OriginCanAddr;
 
-public class InteriorNode implements RadixTreeNode {
+public class InteriorNode extends Node {
 	
-	private Map<Integer, RadixTreeNode> children 		= null;
-	private RadixTreeNode 				parent 			= null;
-	private CanAddr 					cAddr 			= null;
+	private Map<Integer, Node> children 		= null;
+	private Node 				parent 			= null;
+	private CanAddr 			cAddr 			= null;
 	
 	private int							childAggLevel 	= -1;
 	
@@ -27,55 +26,43 @@ public class InteriorNode implements RadixTreeNode {
 		if (mostSigDiffIndex > this.getChildAggLevel()) {
 			InteriorNode intNode = new InteriorNode(this.getCanAddr().truncate(mostSigDiffIndex), mostSigDiffIndex);
 			
-			this.parent.AdoptChild(intNode);
-			intNode.AdoptChild(this);
+			this.parent.adoptNode(intNode);
+			intNode.adoptNode(this);
 			
-			intNode.AdoptChild(new LeafNode(opDPE));
+			intNode.adoptNode(new LeafNode(opDPE));
 		} else {
 			int childValue = opDPE.getCanAddr().getTuple(this.getChildAggLevel());
 			
 			if (this.children.containsKey(childValue)) {
 				this.children.get(childValue).insertDPE(opDPE);
 			} else {
-				this.AdoptChild(new LeafNode(opDPE));
+				this.adoptNode(new LeafNode(opDPE));
 			}
 		}
 	}
 
 	@Override
-	public void notifyOfChildSplit(CanAddr truncatedAddr, int sigDiff) {
-		int childIndex = truncatedAddr.getTuple(this.getChildAggLevel());
-		
-		// Create a new InteriorNode
-		RadixTreeNode newChild = new InteriorNode(truncatedAddr, sigDiff);
-
-		// Have the new child adopt the old child
-		newChild.AdoptChild(this.children.get(childIndex));
-		this.AdoptChild(newChild);
-	}
-
-	@Override
-	public void AdoptChild(RadixTreeNode newChild) {
+	public void adoptNode(Node newChild) {
 		// TODO: Ensure compatibility
 		newChild.setParent(this);
 		this.setChild(newChild);
 	}
 
 	@Override
-	public void setChild(RadixTreeNode newChild) {
+	public void setChild(Node newChild) {
 		if (this.children == null) {
-			this.children = new HashMap<Integer, RadixTreeNode> ();
+			this.children = new HashMap<Integer, Node> ();
 		}
 		this.children.put(newChild.getCanAddr().getTuple(this.getChildAggLevel()), newChild);
 	}
 
 	@Override
-	public void setParent(RadixTreeNode newParent) {
+	public void setParent(Node newParent) {
 		this.parent = newParent;
 	}
 
 	@Override
-	public RadixTreeNode getParent() {
+	public Node getParent() {
 		return this.parent;
 	}
 
@@ -101,11 +88,6 @@ public class InteriorNode implements RadixTreeNode {
 	@Override
 	public CanAddr getCanAddr() {
 		return this.cAddr;
-	}
-
-	@Override
-	public Collection<RadixTreeNode> getChildren() {
-		return this.children.values();
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.andrewshirtz.CG.Util.CanAddr;
-import com.andrewshirtz.CG.Util.OriginCanAddr;
 
 public class CanAddrTest {
 
@@ -138,35 +137,5 @@ public class CanAddrTest {
 		a.setTuple(7, 0);
 		
 		assertTrue(CanAddr.getMostSigDiffIndex(a, b) == 7);
-	}
-	
-	@Test
-	public void testOriginCanAddr() {
-		
-		CanAddr origin = new OriginCanAddr(5);
-		
-		assertTrue(origin.getTuple(10) == 0);
-		assertTrue(!origin.getBit(20, 101));
-		assertTrue(origin.getMostSigIndex() == 0);
-		assertTrue(origin.getLeastSigIndex() == 0);
-		
-		int order = 5;
-		
-		CanAddr a = new CanAddr(order);
-		
-		a.setTuple(0, 1);
-		a.setTuple(1, 2);
-		a.setTuple(2, 3);
-		a.setTuple(3, 4);
-		a.setTuple(4, 5);
-		a.setTuple(5, 6);
-		a.setTuple(6, 7);
-		a.setTuple(7, 8);
-		a.setTuple(8, 9);
-		a.setTuple(9, 10);
-		
-		assertTrue(CanAddr.getMostSigDiffIndex(a, new OriginCanAddr(order)) == a.getMostSigIndex());
-		
-		//fail("Not yet implemented");
 	}
 }

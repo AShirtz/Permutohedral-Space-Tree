@@ -48,20 +48,10 @@ public class CanAddr {
 	
 	public static boolean orderCheck (CanAddr... addrs) {
 		if (addrs.length > 1) {
-			int order = -1;
-			int i;
+			int order = addrs[0].getOrder();
 			
-			for (i = 0; i < addrs.length; i++) { 
-				if (addrs[i].getClass() != OriginCanAddr.class) { 
-					order = addrs[i].getOrder(); 
-					break;
-				}
-			}
-			
-			for (i++; i < addrs.length; i++) {
-				if (addrs[i].getClass() != OriginCanAddr.class) {
-					if (order != addrs[i].getOrder()) { return false; }
-				}
+			for (int i = 1; i < addrs.length; i++) {
+				if (addrs[i].getOrder() != order) { return false; }
 			}
 		}
 		

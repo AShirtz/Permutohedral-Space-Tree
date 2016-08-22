@@ -39,6 +39,7 @@ public class NodeTest {
 		//fail("Not yet implemented");
 	}
 
+	/*	//TODO: update test to use facade
 	@Test
 	public void testInsertion() {
 		int order = 5;
@@ -117,7 +118,10 @@ public class NodeTest {
 		
 		root.insertDPE(bDPE);
 	}
+	*/
 	
+	/*
+	 * // NOTE: This test was to validate correctness of methods that are now private.
 	@Test
 	public void smokeTest() {
 		int minOrder = 3;
@@ -143,7 +147,6 @@ public class NodeTest {
 			}
 			root.toString();
 		}
-		
-		//fail("Not yet implemented");
 	}
+	*/
 }

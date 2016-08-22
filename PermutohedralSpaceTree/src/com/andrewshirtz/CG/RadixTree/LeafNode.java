@@ -5,11 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.andrewshirtz.CG.Util.CanAddr;
-import com.andrewshirtz.CG.Util.OriginCanAddr;
 
-public class LeafNode implements RadixTreeNode {
+public class LeafNode extends Node {
 	
-	private RadixTreeNode 			parent 	= null;
+	private Node 				parent 	= null;
 	public Set<DataPointEntry> 	entries = null;
 	
 	public LeafNode (DataPointEntry initialEntry) {
@@ -24,10 +23,10 @@ public class LeafNode implements RadixTreeNode {
 		if (mostSigDiffIndex >= 0) {
 			InteriorNode intNode = new InteriorNode(this.getCanAddr().truncate(mostSigDiffIndex), mostSigDiffIndex);
 			
-			this.parent.AdoptChild(intNode);
-			intNode.AdoptChild(this);
+			this.parent.adoptNode(intNode);
+			intNode.adoptNode(this);
 			
-			intNode.AdoptChild(new LeafNode(opDPE));
+			intNode.adoptNode(new LeafNode(opDPE));
 		} else {
 			this.entries.add(opDPE);
 		}
@@ -39,23 +38,19 @@ public class LeafNode implements RadixTreeNode {
 
 	// No-op
 	@Override
-	public void notifyOfChildSplit(CanAddr truncatedAddr, int sigDiff) {}
+	public void adoptNode(Node newChild) {}
 
 	// No-op
 	@Override
-	public void AdoptChild(RadixTreeNode newChild) {}
-
-	// No-op
-	@Override
-	public void setChild(RadixTreeNode newChild) {}
+	public void setChild(Node newChild) {}
 
 	@Override
-	public void setParent(RadixTreeNode newParent) {
+	public void setParent(Node newParent) {
 		this.parent = newParent;
 	}
 
 	@Override
-	public RadixTreeNode getParent() {
+	public Node getParent() {
 		return this.parent;
 	}
 
@@ -80,12 +75,6 @@ public class LeafNode implements RadixTreeNode {
 	@Override
 	public CanAddr getCanAddr() {
 		return this.entries.iterator().next().getCanAddr();
-	}
-
-	// TODO: remove after testing
-	@Override
-	public Collection<RadixTreeNode> getChildren() {
-		return null;
 	}
 
 	@Override

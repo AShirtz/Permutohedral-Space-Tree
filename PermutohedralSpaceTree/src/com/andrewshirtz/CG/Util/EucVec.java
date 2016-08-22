@@ -1,11 +1,12 @@
 package com.andrewshirtz.CG.Util;
 
-import java.math.*;
 import java.util.Arrays;
 
 import com.andrewshirtz.CG.Exceptions.DimensionMismatchException;
 
-// TODO: Description
+/*
+ * 	This class provides data members and methods for handling elements of Rn.
+ */
 
 public class EucVec {
 
@@ -151,7 +152,6 @@ public class EucVec {
 	
 	public int getDimension	() { return this.values.length; }
 	
-	// TODO: return these two methods to protected when done with intermediate testing
 	public double getValue (int dim) {
 		if (this.getDimension() < dim) {
 			throw new DimensionMismatchException ("Unable to access value, vector does not contain dimension.");
@@ -159,7 +159,7 @@ public class EucVec {
 		return this.values[dim];
 	}
 	
-	public void setValue (int dim, double value) {
+	protected void setValue (int dim, double value) {
 		if (this.getDimension() < dim) {
 			throw new DimensionMismatchException ("Unable to mutate value, vector does not contain dimension.");
 		}

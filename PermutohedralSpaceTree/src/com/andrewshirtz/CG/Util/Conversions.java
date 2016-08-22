@@ -15,11 +15,11 @@ public class Conversions {
 	 * 		HELPER METHODS
 	 */
 	
-	public static Map <Integer, EucVec[]> 	subspaceBasis 	= null;
-	public static Map <Integer, EucVec[]> 	simplexVectors 	= null;
+	private static Map <Integer, EucVec[]> 	subspaceBasis 	= null;
+	private static Map <Integer, EucVec[]> 	simplexVectors 	= null;
 	
 	//TODO: turn the helper methods private when finished with intermediate testing
-	public static void initSubspaceBasis (int order) {
+	private static void initSubspaceBasis (int order) {
 		if (subspaceBasis == null) {
 			subspaceBasis = new HashMap <Integer, EucVec[]>();
 			createSubspaceBasis(order);
@@ -43,7 +43,7 @@ public class Conversions {
 	 * 		can be mapped (directly or with dimensional scaling, etc.) to this basis set.
 	 */
 	
-	public static void createSubspaceBasis (int order) {
+	private static void createSubspaceBasis (int order) {
 		
 		EucVec [] basisVectors = new EucVec[order-1];
 		for (int i = 0; i < (order-1); i++) {
@@ -65,7 +65,7 @@ public class Conversions {
 		subspaceBasis.put(order, basisVectors);
 	}
 	
-	public static void initSimplexVectors (int order) {
+	private static void initSimplexVectors (int order) {
 		if (simplexVectors == null) { 
 			simplexVectors = new HashMap <Integer, EucVec[]>();
 			createSimplexVectors(order);
@@ -109,12 +109,8 @@ public class Conversions {
 		//		 It's "a pretty magical number", as one person put it.
 		double magic = 1.0/Math.sqrt(1.0+(1.0/(order-1)));
 		
-		for (int i = 0; i < order; i++) {
-			simplexVecs[i] = EucVec.scale(magic, simplexVecs[i]);
-		}
-		
 		// Note: Save the vector set for future use
-		simplexVectors.put(order, simplexVecs);
+		simplexVectors.put(order, EucVec.scale(magic, simplexVecs));
 	}
 	
 	public static EucVec getOnesVector (int order) {
@@ -160,8 +156,8 @@ public class Conversions {
 	 * See the README for more information.
 	 */
 	
-	public static long getInverseBMatrixValue (int col, int row, int order) {
-		return (1L << ((order - 1) - ((((row - col) % order) + order) % order)));
+	public static long getInverseBMatrixShiftValue (int col, int row, int order) {
+		return ((order - 1) - ((((row - col) % order) + order) % order));
 	}
 	
 	public static long getInverseBMatrixDivisor (int order) {
@@ -246,8 +242,8 @@ public class Conversions {
 				int rem = 0;
 				int qot = 0;
 				for (int col = 0; col < order; col++) {
-					qot += (latPoint[col] / radix) * Conversions.getInverseBMatrixValue(col, row, order);
-					rem += (latPoint[col] % radix) * Conversions.getInverseBMatrixValue(col, row, order);
+					qot += (latPoint[col] / radix) << getInverseBMatrixShiftValue(col, row, order);
+					rem += (latPoint[col] % radix) << getInverseBMatrixShiftValue(col, row, order);
 				}
 				tmp[row] = qot + (rem / radix);
 			}
@@ -280,11 +276,6 @@ public class Conversions {
 	}
 	
 	public static EucVec CanAddrToEucVec (CanAddr inCan, EucVec localOffset) {
-		// OriginCanAddr Guard Clause
-		if (inCan.getClass() == OriginCanAddr.class) {
-			return EucVec.zero(inCan.getOrder() - 1);
-		}
-		
 		int order = inCan.getOrder();
 		int index = 0;
 		
